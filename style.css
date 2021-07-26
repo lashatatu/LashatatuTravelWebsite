@@ -25,6 +25,7 @@ body {
 	width: 80%;
 	margin: auto;
 	padding: 2rem 0;
+	z-index: 2;
 }
 
 .line1, .line2 {
@@ -203,15 +204,21 @@ body {
 .t-swipe1 {
 	background: rgb(86, 124, 228);
 }
+
 .t-swipe2 {
-	background: rgb(167,110,231);
+	background: rgb(167, 110, 231);
 }
+
 .t-swipe3 {
-	background:  rgb(255, 139, 93);
+	background: rgb(255, 139, 93);
 }
 
 /*end of third video*/
 
 .scrollmagic-pin-spacer {
 	position: static !important;
+}
+
+body.hide {
+	overflow: hidden;
 }
