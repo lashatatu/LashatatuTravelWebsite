@@ -17,7 +17,7 @@ function animateSlides () {
 		const sliderTl = gsap.timeline({
 			defaults: {
 				duration: 1,
-				ease: 'power2.inOut'
+				ease: 'power2.inOut',
 			}
 		});
 		sliderTl.fromTo(revealImg, {x: '0%'}, {x: '100%'});
