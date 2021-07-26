@@ -1,6 +1,7 @@
 let controller;
 let slideScene;
 let pageScene;
+let detailScene;
 
 function animateSlides () {
 	controller = new ScrollMagic.Controller();
@@ -22,18 +23,17 @@ function animateSlides () {
 		sliderTl.fromTo(revealImg, {x: '0%'}, {x: '100%'});
 		sliderTl.fromTo(img, {scale: 2}, {scale: 1}, '-=1');
 		sliderTl.fromTo(revealText, {x: '0%'}, {x: '100%'}, '-=0.75');
-		sliderTl.fromTo(nav, {y: '-100%'}, {y: '0%'}, '-=0.5');
 
 		slideScene = new ScrollMagic.Scene({
 			triggerElement: slide,
 			triggerHook: 0.25
 		})
 			 .setTween(sliderTl)
-			 .addIndicators({
-				 colorStart: 'white',
-				 colorTrigger: 'white',
-				 name: 'slide'
-			 })
+			 // .addIndicators({
+			 //  colorStart: 'white',
+			 //  colorTrigger: 'white',
+			 //  name: 'slide'
+			 // })
 			 .addTo(controller);
 
 		const pageTl = gsap.timeline();
@@ -55,12 +55,13 @@ function animateSlides () {
 			triggerElement: slide,
 			duration: '100%',
 			triggerHook: 0
-		}).addIndicators({
-			colorStart: 'white',
-			colorTrigger: 'white',
-			name: 'page',
-			indent: 200
 		})
+			 // 	 .addIndicators({
+			 // 	colorStart: 'white',
+			 // 	colorTrigger: 'white',
+			 // 	name: 'page',
+			 // 	indent: 200
+			 // })
 			 .setPin(slide, {pushFollowers: false})
 			 .setTween(pageTl)
 			 .addTo(controller);
@@ -78,7 +79,7 @@ function cursor (e) {
 
 function activeCursor (e) {
 	const item = e.target;
-	if ( item.id === 'logo' || item.classList.contains('burger') ) {
+	if ( item.id === 'logo' || item.id === 'lt-desc' || item.classList.contains('burger') ) {
 		mouse.classList.add('nav-active');
 	} else {
 		mouse.classList.remove('nav-active');
@@ -111,6 +112,7 @@ function navToggle (e) {
 			background: 'black'
 		});
 		gsap.to('#logo', 1, {color: 'black'});
+		gsap.to('#lt-desc', 1, {color: 'black'});
 		gsap.to('.nav-bar', 1, {clipPath: 'circle(2500px at 100% -10%)'});
 		document.body.classList.add('hide');
 	} else {
@@ -128,6 +130,7 @@ function navToggle (e) {
 			background: 'white'
 		});
 		gsap.to('#logo', 1, {color: 'white'});
+		gsap.to('#lt-desc', 1, {color: 'white'});
 		gsap.to('.nav-bar', 1, {clipPath: 'circle(50px at 100% -10%)'});
 		document.body.classList.remove('hide');
 	}
@@ -153,7 +156,11 @@ barba.init({
 			namespace: 'fashion',
 			beforeEnter () {
 				logo.href = '../index.html';
-				gsap.fromTo('.nav-header',1,{y:'100%'},{y:'0%',ease:'power2.inOut'})
+				detailAnimation();
+			},
+			beforeLeave () {
+				controller.destroy();
+				detailScene.destroy();
 			}
 		}
 	],
@@ -202,10 +209,44 @@ barba.init({
 						 opacity: 1
 					 }
 				);
+				tl.fromTo('.nav-header',
+					 1,
+					 {y: '-100%'},
+					 {
+						 y: '0%',
+						 ease: 'power2.inOut'
+					 }, '-=1.5'
+				);
 			}
 		}
 	]
 });
+
+function detailAnimation () {
+	controller = new ScrollMagic.Controller();
+	const slides = document.querySelectorAll('.detail-slide');
+	slides.forEach((slide, index, slides) => {
+		const slideT1 = gsap.timeline({defaults: {duration: 1}});
+		let nextSlide = slides.length - 1 === index ? 'end' : slides[index + 1];
+		const nextImg = nextSlide.querySelector('img');
+		slideT1.fromTo(slide, {opacity: 1}, {opacity: 0});
+		slideT1.fromTo(nextSlide, {opacity: 0}, {opacity: 1}, '-=1');
+		slideT1.fromTo(nextImg, {x: '50%'}, {x: '0%'});
+		detailScene = new ScrollMagic.Scene({
+			triggerElement: slide,
+			duration: '100%',
+			triggerHook: 0
+		})
+			 .setPin(slide, {pushFollowers: false})
+			 .setTween(slideT1)
+			 // .addIndicators({
+			 //  colorStart: 'white',
+			 //  colorTrigger: 'white',
+			 //  name: 'detailScene'
+			 // })
+			 .addTo(controller);
+	});
+}
 
 burger.addEventListener('click', navToggle);
 window.addEventListener('mousemove', cursor);
