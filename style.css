@@ -8,6 +8,11 @@ body {
 	background: #17181A;
 	font-family: "Montserrat", sans-serif;
 	overflow-x: hidden;
+	position: relative;
+}
+
+main {
+	position: absolute;
 }
 
 #logo {
@@ -26,10 +31,12 @@ body {
 	margin: auto;
 	padding: 2rem 0;
 	z-index: 2;
+	position: relative;
 }
 
-.line1, .line2 {
-	width: 0.2rem;
+.line1,
+.line2 {
+	width: 3rem;
 	height: 0.2rem;
 	margin: 0.4rem;
 	background: white;
